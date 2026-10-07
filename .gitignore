@@ -1,0 +1,14 @@
+.venv/
+.runtime/
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+.env.*
+!.env.example
+results/
+dist/
+*.egg-info/
+
+# Local backups and unpublished material.
+archive/

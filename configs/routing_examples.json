@@ -1,0 +1,18 @@
+[
+  {"question": "Suggest a simple weekly study plan with no products or paid services.", "rule_id": "general-assistance"},
+  {"question": "Explain active recall and spaced repetition in three short study tips.", "rule_id": "general-assistance"},
+  {"question": "Help me prepare for an exam with a daily revision schedule.", "rule_id": "general-assistance"},
+  {"question": "Write a friendly thank-you note to my teacher.", "rule_id": "general-assistance"},
+  {"question": "Summarize the benefits of taking breaks while studying.", "rule_id": "general-assistance"},
+  {"question": "Translate a short greeting from English to French.", "rule_id": "general-assistance"},
+  {"question": "Give me three practical tips for organizing my notes.", "rule_id": "general-assistance"},
+  {"question": "Explain photosynthesis in plain language for a beginner.", "rule_id": "general-assistance"},
+  {"question": "Apply an access-control policy to a table of users. Evaluate role exceptions, region restrictions, suspensions and override conditions; return the allowed user IDs as JSON.", "rule_id": "structured-rule-reasoning"},
+  {"question": "Determine which accounts satisfy a permissions policy with nested AND, OR and NOT conditions and explicit deny rules.", "rule_id": "structured-rule-reasoning"},
+  {"question": "Evaluate every row against multiple authorization conditions and list the permitted account IDs in original order.", "rule_id": "structured-rule-reasoning"},
+  {"question": "Check administrator and analyst permissions, region and MFA requirements, with a suspension override exception.", "rule_id": "structured-rule-reasoning"},
+  {"question": "Sort a table by score descending, then cost ascending. Preserve input order when both keys tie, and return only the top six IDs as JSON.", "rule_id": "structured-rule-reasoning"},
+  {"question": "Rank records using multiple sort keys and stable tie breaking; exclude disabled rows and return the selected IDs.", "rule_id": "structured-rule-reasoning"},
+  {"question": "Compute the exact top-k ranking with descending priority, ascending price and stable input order for equal keys.", "rule_id": "structured-rule-reasoning"},
+  {"question": "Return a machine-readable ordered list after filtering records and applying several dependent ordering rules.", "rule_id": "structured-rule-reasoning"}
+]

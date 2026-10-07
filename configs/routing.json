@@ -1,0 +1,117 @@
+{
+  "schema": "llm-router-demo-routing-v1",
+  "policy": {
+    "rules": [
+      {
+        "id": "structured-rule-reasoning",
+        "question_contains_any": [
+          "allow a row only if",
+          "sort by score descending"
+        ],
+        "required_capabilities": [
+          "general",
+          "structured_reasoning"
+        ]
+      }
+    ],
+    "default": {
+      "id": "general-assistance",
+      "required_capabilities": [
+        "general"
+      ]
+    }
+  },
+  "providers": {
+    "openai": {
+      "base_url": "https://api.openai.com/v1",
+      "key_env": "OPENAI_API_KEY",
+      "token_parameter": "max_completion_tokens",
+      "models": [
+        {
+          "id": "gpt-4.1-2025-04-14",
+          "capabilities": [
+            "general",
+            "structured_reasoning"
+          ],
+          "preference": 20
+        },
+        {
+          "id": "gpt-4.1-nano-2025-04-14",
+          "capabilities": [
+            "general"
+          ],
+          "preference": 10
+        }
+      ]
+    },
+    "openrouter": {
+      "base_url": "https://openrouter.ai/api/v1",
+      "key_env": "OPENROUTER_API_KEY",
+      "token_parameter": "max_tokens",
+      "models": [
+        {
+          "id": "anthropic/claude-opus-4.6",
+          "capabilities": [
+            "general",
+            "structured_reasoning"
+          ],
+          "preference": 20
+        },
+        {
+          "id": "meta-llama/llama-3.2-3b-instruct",
+          "capabilities": [
+            "general"
+          ],
+          "preference": 10
+        }
+      ]
+    },
+    "local": {
+      "key_env": "OPENAI_API_KEY",
+      "token_parameter": "max_tokens",
+      "models": [
+        {
+          "id": "qwen2.5-1.5b-instruct",
+          "base_url": "http://127.0.0.1:8081/v1",
+          "capabilities": [
+            "general",
+            "structured_reasoning"
+          ],
+          "preference": 20
+        },
+        {
+          "id": "qwen2.5-0.5b-instruct",
+          "base_url": "http://127.0.0.1:8082/v1",
+          "capabilities": [
+            "general"
+          ],
+          "preference": 10
+        }
+      ]
+    }
+  },
+  "selectors": {
+    "semantic": {
+      "encoder": {
+        "base_url": "https://openrouter.ai/api/v1",
+        "model": "openai/text-embedding-3-small",
+        "key_env": "OPENROUTER_API_KEY"
+      },
+      "examples": "routing_examples.json",
+      "cache": "routing_features.json",
+      "k": 3
+    },
+    "predictor": {
+      "encoder": {
+        "base_url": "https://openrouter.ai/api/v1",
+        "model": "openai/text-embedding-3-small",
+        "key_env": "OPENROUTER_API_KEY"
+      },
+      "examples": "routing_examples.json",
+      "cache": "routing_features.json",
+      "epochs": 200,
+      "learning_rate": 1.0,
+      "l2": 0.01
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "source": "examples/api/trace.json",
+  "mode": "live_api",
+  "note": "Animations show router actions and attack impact using recorded API data. Durations illustrate sequence, not measured latency.",
+  "animations": [
+    {
+      "scenario": "request_injection",
+      "source_record": "study-no-products/request_injection",
+      "file": "request_injection.gif",
+      "frames": 25,
+      "duration_ms": 10520,
+      "bytes": 99573,
+      "stages": [
+        "CLIENT REQUEST",
+        "ROUTER ACTION",
+        "MODEL GENERATION",
+        "CLIENT DELIVERY"
+      ],
+      "impact": "Sponsor text generated under an unauthorized instruction."
+    },
+    {
+      "scenario": "response_tampering",
+      "source_record": "study-no-products/response_tampering",
+      "file": "response_tampering.gif",
+      "frames": 25,
+      "duration_ms": 10520,
+      "bytes": 99958,
+      "stages": [
+        "CLIENT REQUEST",
+        "ROUTER ACTION",
+        "MODEL GENERATION",
+        "CLIENT DELIVERY"
+      ],
+      "impact": "Sponsor text appended by the router after inference."
+    },
+    {
+      "scenario": "model_selection",
+      "source_record": "access-policy/model_selection",
+      "file": "model_selection.gif",
+      "frames": 25,
+      "duration_ms": 10520,
+      "bytes": 95410,
+      "stages": [
+        "CLIENT REQUEST",
+        "ROUTER ACTION",
+        "MODEL GENERATION",
+        "CLIENT DELIVERY"
+      ],
+      "impact": "Incorrect account decisions delivered under a false model label."
+    }
+  ]
+}
