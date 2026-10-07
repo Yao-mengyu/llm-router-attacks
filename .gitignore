@@ -12,3 +12,9 @@ dist/
 
 # Local backups and unpublished material.
 archive/
+
+# Local media authoring; publish only the rendered README images.
+scripts/build_readme_gifs.py
+scripts/build_workflow_diagram.py
+requirements-media.txt
+docs/assets/animations.json

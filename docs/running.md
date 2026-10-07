@@ -107,13 +107,3 @@ python -m router_attack_demo report --input results/api.json --out results/REPOR
 ```
 
 `python -m router_attack_demo list` lists the attacks and tasks. `--case access-policy` restricts a run to that task. To show model substitution with a truthful model label, add `--model-claim actual`.
-
-## Regenerate the images
-
-This optional step requires Pillow:
-
-```bash
-python -m pip install -r requirements-media.txt
-python scripts/build_workflow_diagram.py
-python scripts/build_readme_gifs.py
-```

@@ -1,2 +1,0 @@
-# Optional dependency for README diagrams and GIFs; unnecessary for replay/API runs.
-Pillow==12.0.0
