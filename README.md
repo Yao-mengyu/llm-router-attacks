@@ -57,3 +57,5 @@ The 3B model also wraps its answers in Markdown code blocks instead of returning
 > **The client needs evidence of the actual model, request, and response.**
 >
 > A router's answer and model label do not establish what happened behind it. A verification mechanism is needed to establish that the serving model satisfies the question's routing policy, the backend receives the authorized request, and the client receives the backend's original response.
+
+Licensed under the [MIT License](LICENSE).
