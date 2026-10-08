@@ -56,7 +56,10 @@ def terminal_report(payload, records, details=False):
         regressions = sum(a["evaluation"]["task_pass"] and not b["evaluation"]["task_pass"] for a, b in pairs)
         lines += ["", f"Correct task outputs: normal={good}/{len(pairs)}, substituted={alt}/{len(pairs)}; regressions={regressions}."]
     lines += [f"Model calls attempted: {payload['model_calls_attempted']}; retained errors: {len(payload['errors'])}."]
-    return "\n".join(lines) + "\n"
+    output = "\n".join(lines) + "\n"
+    return "".join(f"\\u{ord(c):04x}" if (ord(c) < 32 and c not in "\n\t")
+                   or 127 <= ord(c) <= 159 or c in "\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069"
+                   else c for c in output)
 
 
 def fence(text, language="text"):

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.parse
@@ -16,13 +17,29 @@ class BackendError(RuntimeError):
     pass
 
 
+def reject_credential_echo(value, key):
+    if key and key in json.dumps(value, ensure_ascii=False):
+        raise BackendError("Backend response echoed a credential; response was not recorded.")
+
+
+def token_usage(value):
+    if not isinstance(value, dict):
+        return None
+    return {name: value[name] for name in ("prompt_tokens", "completion_tokens", "total_tokens")
+            if type(value.get(name)) is int and value[name] >= 0}
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         raise BackendError("Redirect refused; credentials are only sent to the configured endpoint.")
 
 
 def validate_url(value: str, local: bool) -> str:
-    p = urllib.parse.urlsplit(value)
+    try:
+        p = urllib.parse.urlsplit(value)
+        p.port
+    except ValueError:
+        raise ValueError("Endpoint has an invalid host or port.") from None
     if (not p.hostname or p.username or p.password or p.query or p.fragment
             or any(c.isspace() for c in value)):
         raise ValueError("Endpoint must have a host and no credentials, query, fragment, or whitespace.")
@@ -49,6 +66,8 @@ class ChatBackend:
 
     def __post_init__(self):
         self.base_url = validate_url(self.base_url, self.local)
+        if not isinstance(self.key_env, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", self.key_env):
+            raise ValueError("key_env must name an environment variable.")
         if self.token_parameter not in {"max_tokens", "max_completion_tokens"}:
             raise ValueError("Unsupported token limit parameter.")
         if not self.local:
@@ -90,6 +109,7 @@ class ChatBackend:
             raise BackendError("Backend connection failed or timed out; check endpoint and connectivity.") from None
         except (ValueError, UnicodeError):
             raise BackendError("Backend returned invalid JSON.") from None
+        reject_credential_echo(raw, self._api_key)
         try:
             choice = raw["choices"][0]
             content = choice["message"]["content"]
@@ -100,10 +120,9 @@ class ChatBackend:
         # Explicit allowlist instead of retaining arbitrary provider metadata.
         generation = {
             "text": content, "requested_model": self.model, "reported_model": raw.get("model"),
-            "latency_seconds": time.monotonic() - started, "usage": raw.get("usage"),
+            "latency_seconds": time.monotonic() - started, "usage": token_usage(raw.get("usage")),
             "finish_reason": choice.get("finish_reason"),
             "request_settings": {k: v for k, v in payload.items() if k != "messages"},
-            "api_response_id": raw.get("id"), "system_fingerprint": raw.get("system_fingerprint"),
         }
         # An exact snapshot/llama alias avoids confusing provider alias changes
         # with a malicious router. Use exact returned IDs for custom providers.

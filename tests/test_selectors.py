@@ -2,6 +2,7 @@
 import copy
 import io
 import json
+import math
 import os
 import tempfile
 import unittest
@@ -12,11 +13,28 @@ from unittest.mock import patch
 from router_attack_demo.cli import DEFAULT_ROUTING, main
 from router_attack_demo.util import AD_SENTENCE
 from router_attack_demo.routing import load_configuration, select_question
-from router_attack_demo.selectors import classify_question, fetch_embeddings, train_predictor
+from router_attack_demo.selectors import classify_question, fetch_embeddings, train_predictor, unit_vector
 from router_attack_demo.workloads import demo_workloads
 
 
 class SelectorTests(unittest.TestCase):
+    def test_extreme_finite_embeddings_remain_unit_vectors(self):
+        for values in ([1e308, -1e308], [5e-324, 5e-324]):
+            normalized = unit_vector(values)
+            self.assertTrue(math.isclose(sum(v * v for v in normalized), 1, rel_tol=1e-12))
+        for values in ([float("nan")], [float("inf")], [True], [10**1000]):
+            with self.assertRaises(ValueError): unit_vector(values)
+
+    def test_embedding_success_response_cannot_echo_a_credential(self):
+        secret = "unit-test-embedding-success-key"
+        encoder = {"base_url": "https://example.org/v1", "model": "embedding-model", "key_env": "TEST_KEY"}
+        reply = {"data": [{"index": 0, "embedding": [1.0, 0.0]}], "usage": {"unexpected": secret}}
+        with patch.dict(os.environ, {"TEST_KEY": secret}), patch("urllib.request.build_opener") as opener:
+            opener.return_value.open.return_value.__enter__.return_value.read.return_value = json.dumps(reply).encode()
+            with self.assertRaisesRegex(RuntimeError, "echoed a credential") as error:
+                fetch_embeddings(encoder, ["question"])
+            self.assertNotIn(secret, str(error.exception))
+
     def test_embeddings_route_without_keyword_rules_or_network(self):
         for method in ("semantic", "predictor"):
             with self.subTest(method=method), patch.dict(os.environ, {}, clear=True), patch("urllib.request.build_opener") as network:

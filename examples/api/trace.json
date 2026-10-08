@@ -197,25 +197,7 @@
         "usage": {
           "prompt_tokens": 77,
           "completion_tokens": 136,
-          "total_tokens": 213,
-          "cost": 4.94793e-05,
-          "is_byok": false,
-          "prompt_tokens_details": {
-            "cached_tokens": 0,
-            "cache_write_tokens": 0,
-            "audio_tokens": 0,
-            "video_tokens": 0
-          },
-          "cost_details": {
-            "upstream_inference_cost": 4.94793e-05,
-            "upstream_inference_prompt_cost": 3.9193e-06,
-            "upstream_inference_completions_cost": 4.556e-05
-          },
-          "completion_tokens_details": {
-            "reasoning_tokens": 0,
-            "image_tokens": 0,
-            "audio_tokens": 0
-          }
+          "total_tokens": 213
         },
         "finish_reason": "stop",
         "request_settings": {
@@ -223,9 +205,7 @@
           "stream": false,
           "max_tokens": 384,
           "temperature": 0.0
-        },
-        "api_response_id": "gen-1791395907-P9hsBLQnpCpCHTGgju5Q",
-        "system_fingerprint": null
+        }
       },
       "effect": "Honest forwarding under the endorsed policy.",
       "reused_execution": null,
@@ -292,25 +272,7 @@
         "usage": {
           "prompt_tokens": 108,
           "completion_tokens": 182,
-          "total_tokens": 290,
-          "cost": 6.546e-05,
-          "is_byok": false,
-          "prompt_tokens_details": {
-            "cached_tokens": 0,
-            "cache_write_tokens": 0,
-            "audio_tokens": 0,
-            "video_tokens": 0
-          },
-          "cost_details": {
-            "upstream_inference_cost": 6.546e-05,
-            "upstream_inference_prompt_cost": 5.4e-06,
-            "upstream_inference_completions_cost": 6.006e-05
-          },
-          "completion_tokens_details": {
-            "reasoning_tokens": 0,
-            "image_tokens": 0,
-            "audio_tokens": 0
-          }
+          "total_tokens": 290
         },
         "finish_reason": "stop",
         "request_settings": {
@@ -318,9 +280,7 @@
           "stream": false,
           "max_tokens": 384,
           "temperature": 0.0
-        },
-        "api_response_id": "gen-1791395908-CdtxoOLHIeVXnwT4fj07",
-        "system_fingerprint": "vllm-0.23.0-54e1a75c"
+        }
       },
       "effect": "The model itself may generate sponsored content the client explicitly excluded.",
       "reused_execution": null,
@@ -383,25 +343,7 @@
         "usage": {
           "prompt_tokens": 77,
           "completion_tokens": 136,
-          "total_tokens": 213,
-          "cost": 4.94793e-05,
-          "is_byok": false,
-          "prompt_tokens_details": {
-            "cached_tokens": 0,
-            "cache_write_tokens": 0,
-            "audio_tokens": 0,
-            "video_tokens": 0
-          },
-          "cost_details": {
-            "upstream_inference_cost": 4.94793e-05,
-            "upstream_inference_prompt_cost": 3.9193e-06,
-            "upstream_inference_completions_cost": 4.556e-05
-          },
-          "completion_tokens_details": {
-            "reasoning_tokens": 0,
-            "image_tokens": 0,
-            "audio_tokens": 0
-          }
+          "total_tokens": 213
         },
         "finish_reason": "stop",
         "request_settings": {
@@ -409,9 +351,7 @@
           "stream": false,
           "max_tokens": 384,
           "temperature": 0.0
-        },
-        "api_response_id": "gen-1791395907-P9hsBLQnpCpCHTGgju5Q",
-        "system_fingerprint": null
+        }
       },
       "effect": "The router appends sponsored content that the serving model never generated.",
       "reused_execution": "study-no-products/honest",
@@ -474,25 +414,7 @@
         "usage": {
           "prompt_tokens": 420,
           "completion_tokens": 16,
-          "total_tokens": 436,
-          "cost": 0.0025,
-          "is_byok": false,
-          "prompt_tokens_details": {
-            "cached_tokens": 0,
-            "cache_write_tokens": 0,
-            "audio_tokens": 0,
-            "video_tokens": 0
-          },
-          "cost_details": {
-            "upstream_inference_cost": 0.0025,
-            "upstream_inference_prompt_cost": 0.0021,
-            "upstream_inference_completions_cost": 0.0004
-          },
-          "completion_tokens_details": {
-            "reasoning_tokens": 0,
-            "image_tokens": 0,
-            "audio_tokens": 0
-          }
+          "total_tokens": 436
         },
         "finish_reason": "stop",
         "request_settings": {
@@ -500,9 +422,7 @@
           "stream": false,
           "max_tokens": 384,
           "temperature": 0.0
-        },
-        "api_response_id": "gen-1791395909-3n56MMwkUHrbVcz3Mp89",
-        "system_fingerprint": null
+        }
       },
       "effect": "Honest forwarding under the endorsed policy.",
       "reused_execution": null,
@@ -588,25 +508,7 @@
         "usage": {
           "prompt_tokens": 430,
           "completion_tokens": 27,
-          "total_tokens": 457,
-          "cost": 3.041e-05,
-          "is_byok": false,
-          "prompt_tokens_details": {
-            "cached_tokens": 16,
-            "cache_write_tokens": 0,
-            "audio_tokens": 0,
-            "video_tokens": 0
-          },
-          "cost_details": {
-            "upstream_inference_cost": 3.041e-05,
-            "upstream_inference_prompt_cost": 2.15e-05,
-            "upstream_inference_completions_cost": 8.91e-06
-          },
-          "completion_tokens_details": {
-            "reasoning_tokens": 0,
-            "image_tokens": 0,
-            "audio_tokens": 0
-          }
+          "total_tokens": 457
         },
         "finish_reason": "stop",
         "request_settings": {
@@ -614,9 +516,7 @@
           "stream": false,
           "max_tokens": 384,
           "temperature": 0.0
-        },
-        "api_response_id": "gen-1791395912-4mha2QkAXjztQNggatj0",
-        "system_fingerprint": "vllm-0.23.0-54e1a75c"
+        }
       },
       "effect": "Serve an unauthorized model; compare the task result and the router's returned model claim. The router falsely labels the answer as the approved model's output.",
       "reused_execution": null,
@@ -695,25 +595,7 @@
         "usage": {
           "prompt_tokens": 170,
           "completion_tokens": 25,
-          "total_tokens": 195,
-          "cost": 0.001475,
-          "is_byok": false,
-          "prompt_tokens_details": {
-            "cached_tokens": 0,
-            "cache_write_tokens": 0,
-            "audio_tokens": 0,
-            "video_tokens": 0
-          },
-          "cost_details": {
-            "upstream_inference_cost": 0.001475,
-            "upstream_inference_prompt_cost": 0.00085,
-            "upstream_inference_completions_cost": 0.000625
-          },
-          "completion_tokens_details": {
-            "reasoning_tokens": 0,
-            "image_tokens": 0,
-            "audio_tokens": 0
-          }
+          "total_tokens": 195
         },
         "finish_reason": "stop",
         "request_settings": {
@@ -721,9 +603,7 @@
           "stream": false,
           "max_tokens": 384,
           "temperature": 0.0
-        },
-        "api_response_id": "gen-1791395912-aqtybI1ayYdNFgtgp0Mq",
-        "system_fingerprint": null
+        }
       },
       "effect": "Honest forwarding under the endorsed policy.",
       "reused_execution": null,
@@ -821,25 +701,7 @@
         "usage": {
           "prompt_tokens": 190,
           "completion_tokens": 33,
-          "total_tokens": 223,
-          "cost": 2.0726e-05,
-          "is_byok": false,
-          "prompt_tokens_details": {
-            "cached_tokens": 0,
-            "cache_write_tokens": 0,
-            "audio_tokens": 0,
-            "video_tokens": 0
-          },
-          "cost_details": {
-            "upstream_inference_cost": 2.0726e-05,
-            "upstream_inference_prompt_cost": 9.671e-06,
-            "upstream_inference_completions_cost": 1.1055e-05
-          },
-          "completion_tokens_details": {
-            "reasoning_tokens": 0,
-            "image_tokens": 0,
-            "audio_tokens": 0
-          }
+          "total_tokens": 223
         },
         "finish_reason": "stop",
         "request_settings": {
@@ -847,9 +709,7 @@
           "stream": false,
           "max_tokens": 384,
           "temperature": 0.0
-        },
-        "api_response_id": "gen-1791395914-HfVmQJJPLi3sPgwFOVDR",
-        "system_fingerprint": null
+        }
       },
       "effect": "Serve an unauthorized model; compare the task result and the router's returned model claim. The router falsely labels the answer as the approved model's output.",
       "reused_execution": null,

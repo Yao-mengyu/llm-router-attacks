@@ -13,18 +13,24 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from .backends import BackendError, NoRedirect, validate_url
+from .backends import BackendError, NoRedirect, reject_credential_echo, token_usage, validate_url
 from .util import canonical, digest, text_digest
 
 
 def unit_vector(value):
-    if (not isinstance(value, list) or not value or len(value) > 8192
-            or any(type(v) not in (int, float) or not math.isfinite(v) for v in value)):
+    try:
+        valid = (isinstance(value, list) and 0 < len(value) <= 8192
+                 and all(type(v) in (int, float) and math.isfinite(v) for v in value))
+    except OverflowError:
+        valid = False
+    if not valid:
         raise ValueError("Embedding must contain finite numeric values.")
-    norm = math.sqrt(sum(v * v for v in value))
-    if norm == 0:
+    scale = max(abs(v) for v in value)
+    if scale == 0:
         raise ValueError("Embedding must have nonzero length.")
-    return [v / norm for v in value]
+    scaled = [v / scale for v in value]
+    norm = math.sqrt(sum(v * v for v in scaled))
+    return [v / norm for v in scaled]
 
 
 def dot(a, b):
@@ -147,6 +153,7 @@ def fetch_embeddings(encoder: dict, questions: list[str], timeout=90):
     local = encoder["base_url"].startswith("http://")
     base_url = validate_url(encoder["base_url"], local)
     headers = {"Content-Type": "application/json", "User-Agent": "Router-Attack-Demo/0.3"}
+    key = ""
     if not local:
         key = os.environ.get(encoder["key_env"], "")
         if not key.strip():
@@ -171,6 +178,7 @@ def fetch_embeddings(encoder: dict, questions: list[str], timeout=90):
         raise BackendError("Embedding connection failed or timed out.") from None
     except (ValueError, UnicodeError):
         raise BackendError("Embedding endpoint returned invalid JSON.") from None
+    reject_credential_echo(raw, key)
     try:
         rows = sorted(raw["data"], key=lambda e: e["index"])
         if [e["index"] for e in rows] != list(range(len(questions))):
@@ -180,4 +188,4 @@ def fetch_embeddings(encoder: dict, questions: list[str], timeout=90):
             raise ValueError("Embedding dimensions differ.")
     except (KeyError, TypeError, ValueError):
         raise BackendError("Embedding endpoint returned an invalid or incomplete batch.") from None
-    return vectors, {"reported_model": raw.get("model"), "usage": raw.get("usage"), "requests": 1}
+    return vectors, {"reported_model": raw.get("model"), "usage": token_usage(raw.get("usage")), "requests": 1}

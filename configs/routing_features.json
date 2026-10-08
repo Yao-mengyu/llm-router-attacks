@@ -10,14 +10,7 @@
     "reported_model": "text-embedding-3-small",
     "usage": {
       "prompt_tokens": 826,
-      "total_tokens": 826,
-      "cost": 1.652e-05,
-      "is_byok": false,
-      "cost_details": {
-        "upstream_inference_cost": 1.652e-05,
-        "upstream_inference_prompt_cost": 1.652e-05,
-        "upstream_inference_completions_cost": 0
-      }
+      "total_tokens": 826
     },
     "requests": 1
   },

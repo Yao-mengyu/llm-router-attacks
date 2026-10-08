@@ -4,6 +4,8 @@ from __future__ import annotations
 import copy
 import datetime as dt
 import json
+import os
+import tempfile
 from pathlib import Path
 
 from attacks import ATTACKS
@@ -17,9 +19,17 @@ TRACE_SCHEMA = 'router-attack-demo-trace-v1'
 
 def write_json(path: Path, value: dict):
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + '.tmp')
-    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    temporary.replace(path)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', dir=path.parent,
+                                         prefix='.router-trace-', suffix='.tmp', delete=False) as stream:
+            temporary = Path(stream.name)
+            json.dump(value, stream, ensure_ascii=False, indent=2, allow_nan=False)
+            stream.write('\n')
+        temporary.replace(path)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def run_experiment(cases, model_pool, scenarios, out: Path, mode: str,
@@ -41,7 +51,14 @@ def run_experiment(cases, model_pool, scenarios, out: Path, mode: str,
         'backend': backend_info,
     }, 'cases': copy.deepcopy(cases), 'routing_policy': copy.deepcopy(routing_policy),
         'runs': [], 'errors': [], 'model_calls_attempted': 0}
-    write_json(out, payload)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        descriptor = os.open(out, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError:
+        raise ValueError('Output already exists; choose a new --out path.') from None
+    with os.fdopen(descriptor, 'w', encoding='utf-8') as stream:
+        json.dump(payload, stream, ensure_ascii=False, indent=2, allow_nan=False)
+        stream.write('\n')
     for case in cases:
         route = decisions[case['id']]
         normal_model = route['selected_model']

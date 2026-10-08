@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -93,6 +94,8 @@ def main(argv=None):
         if not 64 <= args.max_tokens <= 4096: p.error("--max-tokens must be 64..4096")
         if not 1 <= args.max_calls <= 100: p.error("--max-calls must be 1..100")
         if not 0 < args.timeout <= 300: p.error("--timeout must be >0 and <=300")
+        if not args.omit_temperature and (not math.isfinite(args.temperature) or not 0 <= args.temperature <= 2):
+            p.error("--temperature must be finite and between 0 and 2")
         cases, scenarios, upper = plan_cases(args, p)
         if upper > args.max_calls:
             p.error(f"Plan can attempt up to {upper} calls; increase --max-calls or choose fewer cases/attacks.")
@@ -128,7 +131,7 @@ def main(argv=None):
             payload = run_experiment(cases, pool, scenarios, args.out,
                                           "live_local" if local else "live_api", info, args.model_claim,
                                           routing_policy=policy)
-        except ValueError as exc: p.error(str(exc))
+        except (OSError, ValueError) as exc: p.error(str(exc))
         print(terminal_report(payload, payload["runs"]))
         print(f"Trace: {args.out}")
         return 1 if payload["errors"] else 0
@@ -140,9 +143,14 @@ def main(argv=None):
     except (OSError, ValueError, KeyError, TypeError) as exc:
         p.error(f"Could not read recording: {type(exc).__name__}")
     if args.command == "report":
-        if args.out.exists(): p.error("Report output exists; choose a new path.")
-        args.out.parent.mkdir(parents=True, exist_ok=True)
-        args.out.write_text(markdown_report(payload, records), encoding="utf-8")
+        try:
+            args.out.parent.mkdir(parents=True, exist_ok=True)
+            with args.out.open("x", encoding="utf-8") as stream:
+                stream.write(markdown_report(payload, records))
+        except FileExistsError:
+            p.error("Report output exists; choose a new path.")
+        except OSError:
+            p.error("Could not write report; check the output path and permissions.")
         print(args.out); return 0
     if args.attack != "all":
         attacked_cases = {r["case_id"] for r in records if r["scenario"] == args.attack}

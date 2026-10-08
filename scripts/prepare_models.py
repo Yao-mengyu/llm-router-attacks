@@ -9,8 +9,8 @@ import argparse
 import hashlib
 import json
 import platform
-import shutil
 import tarfile
+import tempfile
 import urllib.request
 from pathlib import Path
 
@@ -25,14 +25,26 @@ def download(url,path,expected_hash,expected_size):
         if path.stat().st_size==expected_size and sha256(path)==expected_hash:
             print('VERIFIED existing',path.name,flush=True);return
         raise RuntimeError(f'Existing file does not match the configured release: {path}; move it aside before retrying.')
-    partial=path.with_suffix(path.suffix+'.part')
     request=urllib.request.Request(url,headers={'User-Agent':'Router-Attack-Demo/0.3'})
     print('DOWNLOAD',path.name,expected_size,'bytes',flush=True)
-    with urllib.request.urlopen(request,timeout=90) as r,partial.open('wb') as out:
-        shutil.copyfileobj(r,out,length=8*1024*1024)
-    if partial.stat().st_size!=expected_size or sha256(partial)!=expected_hash:
-        raise RuntimeError(f'Checksum mismatch for {path.name}; the partial file was not installed.')
-    partial.replace(path)
+    partial=None
+    try:
+        with urllib.request.urlopen(request,timeout=90) as r, tempfile.NamedTemporaryFile(
+                dir=path.parent,prefix='.model-download-',suffix='.part',delete=False) as out:
+            partial=Path(out.name)
+            received=0
+            while chunk:=r.read(min(8*1024*1024,expected_size-received+1)):
+                received+=len(chunk)
+                if received>expected_size:
+                    raise RuntimeError(f'Download exceeded the configured size for {path.name}.')
+                out.write(chunk)
+        if partial.stat().st_size!=expected_size or sha256(partial)!=expected_hash:
+            raise RuntimeError(f'Checksum mismatch for {path.name}; the partial file was not installed.')
+        # Never replace a file created by another concurrent setup process.
+        path.hardlink_to(partial)
+    finally:
+        if partial is not None:
+            partial.unlink(missing_ok=True)
     print('VERIFIED downloaded',path.name,flush=True)
 
 def main():
